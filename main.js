@@ -57,6 +57,22 @@ bot.on('message', (msg) => {
     }
 });
 
+bot.on('channel_post', (msg) => {
+    switch(msg['text']){
+        case "/start":
+            db.run('insert or ignore into userId values (' + msg.chat.id + ')');
+            break;
+        case "/stop":
+            db.run('delete from userId where id = ' + msg.chat.id);
+            break;
+        case "/help":
+            bot.sendMessage(
+                msg.chat.id, "Available commands: \n /start - start subscription  \n /stop - stop subscription "
+            );
+            break;
+    }
+});
+
 if(config.frequency != 0){
     setInterval(checkUpdates, config.frequency);
 }else{
